@@ -1430,11 +1430,17 @@ class LeRobotSingleDataset(Dataset):
             Path: Path to the video file.
         """
         chunk_index = self.get_episode_chunk(trajectory_id)
+        file_index = trajectory_id % self.chunk_size
         original_key = self.lerobot_modality_meta.video[key].original_key
         if original_key is None:
             original_key = key
+        # Support both v2 and v3 path patterns
         video_filename = self.video_path_pattern.format(
-            episode_chunk=chunk_index, episode_index=trajectory_id, video_key=original_key
+            episode_chunk=chunk_index, 
+            episode_index=trajectory_id, 
+            chunk_index=chunk_index,
+            file_index=file_index,
+            video_key=original_key
         )
         return self.dataset_path / video_filename
 
