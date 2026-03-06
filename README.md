@@ -74,12 +74,12 @@ conda activate dreamzero
 
 2. **Install dependencies (PyTorch 2.8+ with CUDA 12.9+):**
 ```bash
-pip install -e . --extra-index-url https://download.pytorch.org/whl/cu129
+python -m pip install -e . --extra-index-url https://download.pytorch.org/whl/cu129
 ```
 
 3. **Install flash attention:**
 ```bash
-MAX_JOBS=8 pip install --no-build-isolation flash-attn
+MAX_JOBS=8 python -m pip install --no-build-isolation --no-cache-dir flash-attn
 ```
 
 4. **[GB200 ONLY, SKIP FOR H100] Install Transformer Engine:**
