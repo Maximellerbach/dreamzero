@@ -155,6 +155,11 @@ class EmbodimentTag(Enum):
 
     YAM = "yam"
 
+    SO101 = "so101"
+    """
+    The SO-101 single-arm robot with gripper.
+    """
+
     DREAM = "dream"
     """
     The datasets with DREAM actions.

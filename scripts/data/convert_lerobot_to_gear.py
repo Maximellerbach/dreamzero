@@ -62,7 +62,7 @@ VALID_EMBODIMENT_TAGS = [
     "real_panda_single_arm", "hot3d_hands_only",
     "gr1_unified", "robocasa_gr1_arms_waist_fourier_hands",
     "agibot", "lapa", "oxe_mutex", "oxe_roboset", "oxe_plex",
-    "dream", "yam", "xdof",
+    "dream", "yam", "xdof", "so101",
     "gr1_unified_segmentation", "language_table_sim", "gr1_isaac",
     "sim_behavior_r1_pro", "mecka_hands", "real_r1_pro_sharpa",
 ]
@@ -86,11 +86,21 @@ def get_parquet_paths(dataset_path: Path, info: dict) -> list[Path]:
     total_episodes = info["total_episodes"]
     chunks_size = info.get("chunks_size", 1000)
     paths = []
+    # Try v2-style per-episode parquet paths
     for ep_idx in range(total_episodes):
         chunk_idx = ep_idx // chunks_size
-        p = dataset_path / pattern.format(episode_chunk=chunk_idx, episode_index=ep_idx)
+        try:
+            p = dataset_path / pattern.format(
+                episode_chunk=chunk_idx, episode_index=ep_idx,
+                chunk_index=chunk_idx, file_index=ep_idx,
+            )
+        except (KeyError, IndexError):
+            break
         if p.exists():
             paths.append(p)
+    # Fallback: glob all parquet files (handles LeRobot v3+ formats)
+    if not paths:
+        paths = sorted(dataset_path.glob("data/**/*.parquet"))
     return sorted(paths)
 
 
