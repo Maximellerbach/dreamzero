@@ -1333,8 +1333,13 @@ class LeRobotSingleDataset(Dataset):
     def get_parquet_path(self, trajectory_id: int) -> Path:
         """Get the parquet path for a trajectory."""
         chunk_index = self.get_episode_chunk(trajectory_id)
+        file_index = trajectory_id % self.chunk_size
+        # Support both v2 and v3 path patterns
         return self.dataset_path / self.data_path_pattern.format(
-            episode_chunk=chunk_index, episode_index=trajectory_id
+            episode_chunk=chunk_index, 
+            episode_index=trajectory_id,
+            chunk_index=chunk_index,
+            file_index=file_index
         )
 
     def get_trajectory_data(self, trajectory_id: int) -> pd.DataFrame:
